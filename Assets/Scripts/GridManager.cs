@@ -30,7 +30,6 @@ public class GridManager : MonoBehaviour
         if (IsSpaceAvailable(x, y))
         {
             grid[x, y] = obj;
-            // 這裡未來會加入消除行/列的檢查
             CheckAndClearLines();
         }
     }
@@ -40,8 +39,54 @@ public class GridManager : MonoBehaviour
     /// </summary>
     public void CheckAndClearLines()
     {
-        // 1.2 階段會實作具體的消除邏輯與元素特效
-        Debug.Log("Checking lines...");
+        for (int y = 0; y < Rows; y++)
+        {
+            bool full = true;
+            for (int x = 0; x < Columns; x++)
+            {
+                if (grid[x, y] == null) { full = false; break; }
+            }
+
+            if (full) ClearRow(y);
+        }
+
+        for (int x = 0; x < Columns; x++)
+        {
+            bool full = true;
+            for (int y = 0; y < Rows; y++)
+            {
+                if (grid[x, y] == null) { full = false; break; }
+            }
+
+            if (full) ClearColumn(x);
+        }
+    }
+
+    private void ClearRow(int y)
+    {
+        Debug.Log($"Row {y} Cleared!");
+        for (int x = 0; x < Columns; x++)
+        {
+            if (grid[x, y] != null)
+            {
+                // 注意：這裡暫時只是隱藏，未來會加入特效
+                Destroy(grid[x, y]);
+                grid[x, y] = null;
+            }
+        }
+    }
+
+    private void ClearColumn(int x)
+    {
+        Debug.Log($"Column {x} Cleared!");
+        for (int y = 0; y < Rows; y++)
+        {
+            if (grid[x, y] != null)
+            {
+                Destroy(grid[x, y]);
+                grid[x, y] = null;
+            }
+        }
     }
 
     /// <summary>

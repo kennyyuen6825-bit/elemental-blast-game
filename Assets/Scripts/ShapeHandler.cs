@@ -44,8 +44,14 @@ public class ShapeHandler : MonoBehaviour
         foreach (var pos in relativeIndices)
         {
             GameObject block = Instantiate(blockPrefab, transform);
-            // 使用 spacing 變量進行排列，消除 warning
             block.transform.localPosition = new Vector3(pos.x * spacing, pos.y * spacing, 0);
+            
+            // 自動設置方塊顏色，讓它與背景區分開
+            SpriteRenderer sr = block.GetComponent<SpriteRenderer>();
+            if (sr != null) {
+                sr.color = new Color(1f, 0.5f, 0f); // 亮橘色
+                sr.sortingOrder = 10;               // 確保在最上層
+            }
             
             if (first) {
                 bounds = new Bounds(block.transform.localPosition, Vector3.one);
