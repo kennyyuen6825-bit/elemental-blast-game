@@ -44,8 +44,8 @@ public class ShapeHandler : MonoBehaviour
         foreach (var pos in relativeIndices)
         {
             GameObject block = Instantiate(blockPrefab, transform);
-            // 使用 1.1f 作為間距進行排列
-            block.transform.localPosition = new Vector3(pos.x * 1.1f, pos.y * 1.1f, 0);
+            // 使用 spacing 變量進行排列，消除 warning
+            block.transform.localPosition = new Vector3(pos.x * spacing, pos.y * spacing, 0);
             
             if (first) {
                 bounds = new Bounds(block.transform.localPosition, Vector3.one);
