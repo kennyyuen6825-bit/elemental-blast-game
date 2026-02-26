@@ -33,13 +33,19 @@ public class ShapeHandler : MonoBehaviour
 
         if (blockPrefab == null) return;
 
+        // 獲取網格間距，確保方塊間距與網格一致
+        float spacing = 1.1f;
+        if (gridManager == null) gridManager = FindObjectOfType<GridManager>();
+        // 注意：這裡假設 GridManager 有一個公有的 cellSize 變量，我們稍後更新它
+        
         Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
         bool first = true;
 
         foreach (var pos in relativeIndices)
         {
             GameObject block = Instantiate(blockPrefab, transform);
-            block.transform.localPosition = new Vector3(pos.x, pos.y, 0);
+            // 使用 1.1f 作為間距進行排列
+            block.transform.localPosition = new Vector3(pos.x * 1.1f, pos.y * 1.1f, 0);
             
             if (first) {
                 bounds = new Bounds(block.transform.localPosition, Vector3.one);
