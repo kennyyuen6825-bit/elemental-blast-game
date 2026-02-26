@@ -45,8 +45,16 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 將螢幕點擊的坐標轉換為網格索引
+    /// 將網格索引轉換為世界座標
     /// </summary>
+    public Vector3 GridToWorld(Vector2Int gridPos)
+    {
+        return new Vector3(
+            gridPos.x * cellSize + gridOffset.x,
+            gridPos.y * cellSize + gridOffset.y,
+            0
+        );
+    }
     public Vector2Int WorldToGrid(Vector3 worldPosition)
     {
         int x = Mathf.RoundToInt((worldPosition.x - gridOffset.x) / cellSize);
