@@ -5,6 +5,7 @@ public class GridGenerator : MonoBehaviour
     public int columns = 8;
     public int rows = 8;
     public float cellSize = 1.1f;
+    public float tileVisualSize = 1.05f; // 新增：視覺上的格子大小，稍微大於 1.0 以消除縫隙
     public GameObject tilePrefab; // 拖入一個簡單的白色正方形 Sprite
 
     public bool autoFitCamera = true;
@@ -39,6 +40,7 @@ public class GridGenerator : MonoBehaviour
                 GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity);
                 tile.transform.parent = this.transform;
                 tile.name = $"Tile_{x}_{y}";
+                tile.transform.localScale = Vector3.one * tileVisualSize; // 設定視覺大小
                 
                 // 調整背景格子的顏色（深灰色比較好看）
                 SpriteRenderer sr = tile.GetComponent<SpriteRenderer>();
