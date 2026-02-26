@@ -7,6 +7,7 @@ public class ShapeHandler : MonoBehaviour
     public GameObject blockPrefab;
     public float scaleOnDrag = 1.2f;
     
+    public GridManager gridManager;
     private Vector3 startPosition;
     private Vector3 offset;
     private bool isDragging = false;
@@ -14,6 +15,7 @@ public class ShapeHandler : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
+        if (gridManager == null) gridManager = FindObjectOfType<GridManager>();
     }
 
     // 根據相對座標生成組成形狀的小方塊
@@ -74,7 +76,39 @@ public class ShapeHandler : MonoBehaviour
     {
         isDragging = false;
         transform.localScale = Vector3.one;
-        // 這裡未來會加入「放置判定」邏輯
+
+        if (gridManager != null)
+        {
+            Vector2Int gridPos = gridManager.WorldToGrid(transform.position);
+            
+            // 檢查形狀中的所有小方塊是否都能放下
+            bool canPlace = true;
+            foreach (var pos in relativeIndices)
+            {
+                if (!gridManager.IsSpaceAvailable(gridPos.x + pos.x, gridPos.y + pos.y))
+                {
+                    canPlace = false;
+                    break;
+                }
+            }
+
+            if (canPlace)
+            {
+                // 正式放置
+                foreach (var pos in relativeIndices)
+                {
+                    gridManager.PlaceObject(gridPos.x + pos.x, gridPos.y + pos.y, gameObject);
+                }
+                
+                // 讓這個 Shape 直接停在對齊後的位置
+                transform.position = gridManager.GridToWorld(gridPos);
+                // 禁用拖拽，防止重複放置
+                enabled = false; 
+                return;
+            }
+        }
+        
+        // 如果不能放置，彈回原位
         transform.position = startPosition; 
     }
 
