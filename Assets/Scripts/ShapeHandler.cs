@@ -8,6 +8,7 @@ public class ShapeHandler : MonoBehaviour
     public float scaleOnDrag = 1.2f;
     
     public GridManager gridManager;
+    private ShapeSpawner spawner;
     private Vector3 startPosition;
     private Vector3 offset;
     private bool isDragging = false;
@@ -16,6 +17,7 @@ public class ShapeHandler : MonoBehaviour
     {
         startPosition = transform.position;
         if (gridManager == null) gridManager = FindObjectOfType<GridManager>();
+        spawner = FindObjectOfType<ShapeSpawner>();
     }
 
     // 根據相對座標生成組成形狀的小方塊
@@ -116,6 +118,10 @@ public class ShapeHandler : MonoBehaviour
                 transform.position = gridManager.GridToWorld(gridPos);
                 // 禁用拖拽，防止重複放置
                 enabled = false; 
+
+                // 通知生成器：這個方塊被用掉了
+                if (spawner != null) spawner.OnShapePlaced(gameObject);
+                
                 return;
             }
         }
