@@ -7,9 +7,23 @@ public class GridGenerator : MonoBehaviour
     public float cellSize = 1.1f;
     public GameObject tilePrefab; // 拖入一個簡單的白色正方形 Sprite
 
+    public bool autoFitCamera = true;
+
     void Start()
     {
         GenerateBackgroundGrid();
+        if (autoFitCamera) FitCamera();
+    }
+
+    void FitCamera()
+    {
+        Camera cam = Camera.main;
+        float gridWidth = columns * cellSize;
+        // 根據螢幕寬度計算攝像機所需的 Size
+        float screenAspect = (float)Screen.width / Screen.height;
+        float targetSize = (gridWidth / screenAspect) / 2f;
+        // 增加一點邊距
+        cam.orthographicSize = targetSize + 1f;
     }
 
     void GenerateBackgroundGrid()
