@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum ElementType { None, Fire, Water, Wind, Earth }
+
 public class ShapeHandler : MonoBehaviour
 {
+    public ElementType elementType = ElementType.None;
     public List<Vector2Int> relativeIndices = new List<Vector2Int>();
     public GameObject blockPrefab;
     public Color color = new Color(1f, 0.5f, 0f); // 預設顏色
@@ -19,6 +22,18 @@ public class ShapeHandler : MonoBehaviour
         startPosition = transform.position;
         if (gridManager == null) gridManager = FindObjectOfType<GridManager>();
         spawner = FindObjectOfType<ShapeSpawner>();
+    }
+
+    public void SetElement(ElementType type)
+    {
+        this.elementType = type;
+        switch (type)
+        {
+            case ElementType.Fire: color = new Color(1f, 0.2f, 0.2f); break; // 紅色
+            case ElementType.Water: color = new Color(0.2f, 0.5f, 1f); break; // 藍色
+            case ElementType.Wind: color = new Color(0.8f, 1f, 1f); break;   // 青白
+            case ElementType.Earth: color = new Color(0.4f, 0.8f, 0.2f); break; // 綠色
+        }
     }
 
     // 根據相對座標生成組成形狀的小方塊

@@ -54,7 +54,10 @@ public class ShapeSpawner : MonoBehaviour
         // 隨機抽一個形狀數據
         ShapeData data = availableShapes[Random.Range(0, availableShapes.Count)];
         handler.relativeIndices = new List<Vector2Int>(data.relativeIndices);
-        handler.color = data.color; // 傳遞顏色
+        
+        // 隨機分配元素屬性
+        ElementType randomElement = (ElementType)Random.Range(1, 5); // 隨機 1 到 4 (Fire 到 Earth)
+        handler.SetElement(randomElement);
         
         // 這裡可以傳遞顏色，讓 ShapeHandler 更新視覺
         handler.CreateVisuals();
