@@ -29,11 +29,29 @@ public class ShapeHandler : MonoBehaviour
             #endif
         }
 
+        if (blockPrefab == null) return;
+
+        Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+        bool first = true;
+
         foreach (var pos in relativeIndices)
         {
-            if (blockPrefab == null) return;
             GameObject block = Instantiate(blockPrefab, transform);
             block.transform.localPosition = new Vector3(pos.x, pos.y, 0);
+            
+            if (first) {
+                bounds = new Bounds(block.transform.localPosition, Vector3.one);
+                first = false;
+            } else {
+                bounds.Encapsulate(new Bounds(block.transform.localPosition, Vector3.one));
+            }
+        }
+
+        // 自動調整 BoxCollider2D
+        BoxCollider2D collider = GetComponent<BoxCollider2D>();
+        if (collider != null) {
+            collider.offset = bounds.center;
+            collider.size = bounds.size;
         }
     }
 
