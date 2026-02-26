@@ -30,7 +30,8 @@ public class ShapeSpawner : MonoBehaviour
         // 定義經典方塊
         availableShapes.Add(new ShapeData { name = "Dot", color = Color.yellow, relativeIndices = new Vector2Int[] { new Vector2Int(0,0) } });
         availableShapes.Add(new ShapeData { name = "I_2", color = Color.cyan, relativeIndices = new Vector2Int[] { new Vector2Int(0,0), new Vector2Int(0,1) } });
-        availableShapes.Add(new ShapeData { name = "L_Small", color = Color.orange, relativeIndices = new Vector2Int[] { new Vector2Int(0,0), new Vector2Int(0,1), new Vector2Int(1,0) } });
+        // 使用自定義橘色，避免部分版本缺少 Color.orange
+        availableShapes.Add(new ShapeData { name = "L_Small", color = new Color(1f, 0.5f, 0f), relativeIndices = new Vector2Int[] { new Vector2Int(0,0), new Vector2Int(0,1), new Vector2Int(1,0) } });
         availableShapes.Add(new ShapeData { name = "Square_2x2", color = Color.blue, relativeIndices = new Vector2Int[] { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(0,1), new Vector2Int(1,1) } });
     }
 
@@ -53,6 +54,7 @@ public class ShapeSpawner : MonoBehaviour
         // 隨機抽一個形狀數據
         ShapeData data = availableShapes[Random.Range(0, availableShapes.Count)];
         handler.relativeIndices = new List<Vector2Int>(data.relativeIndices);
+        handler.color = data.color; // 傳遞顏色
         
         // 這裡可以傳遞顏色，讓 ShapeHandler 更新視覺
         handler.CreateVisuals();

@@ -5,6 +5,7 @@ public class ShapeHandler : MonoBehaviour
 {
     public List<Vector2Int> relativeIndices = new List<Vector2Int>();
     public GameObject blockPrefab;
+    public Color color = new Color(1f, 0.5f, 0f); // 預設顏色
     public float scaleOnDrag = 1.2f;
     
     public GridManager gridManager;
@@ -48,10 +49,10 @@ public class ShapeHandler : MonoBehaviour
             GameObject block = Instantiate(blockPrefab, transform);
             block.transform.localPosition = new Vector3(pos.x * spacing, pos.y * spacing, 0);
             
-            // 自動設置方塊顏色，讓它與背景區分開
+            // 使用腳本設定的顏色，讓它與背景區分開
             SpriteRenderer sr = block.GetComponent<SpriteRenderer>();
             if (sr != null) {
-                sr.color = new Color(1f, 0.5f, 0f); // 亮橘色
+                sr.color = this.color;
                 sr.sortingOrder = 10;               // 確保在最上層
             }
             
