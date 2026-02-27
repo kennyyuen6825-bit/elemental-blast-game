@@ -25,13 +25,17 @@ public class GridManager : MonoBehaviour
     /// <summary>
     /// 在網格中佔據一個位置
     /// </summary>
-    public void PlaceObject(int x, int y, GameObject obj)
+    public void PlaceObject(int x, int y, GameObject blockObj)
     {
-        if (IsSpaceAvailable(x, y))
+        if (x >= 0 && x < Columns && y >= 0 && y < Rows)
         {
-            grid[x, y] = obj;
-            CheckAndClearLines();
+            grid[x, y] = blockObj;
         }
+    }
+
+    public void FinalizePlacement()
+    {
+        CheckAndClearLines();
     }
 
     /// <summary>
@@ -39,6 +43,9 @@ public class GridManager : MonoBehaviour
     /// </summary>
     public void CheckAndClearLines()
     {
+        System.Collections.Generic.List<int> rowsToClear = new System.Collections.Generic.List<int>();
+        System.Collections.Generic.List<int> colsToClear = new System.Collections.Generic.List<int>();
+
         for (int y = 0; y < Rows; y++)
         {
             bool full = true;
@@ -46,8 +53,7 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[x, y] == null) { full = false; break; }
             }
-
-            if (full) ClearRow(y);
+            if (full) rowsToClear.Add(y);
         }
 
         for (int x = 0; x < Columns; x++)
@@ -57,9 +63,11 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[x, y] == null) { full = false; break; }
             }
-
-            if (full) ClearColumn(x);
+            if (full) colsToClear.Add(x);
         }
+
+        foreach (int y in rowsToClear) ClearRow(y);
+        foreach (int x in colsToClear) ClearColumn(x);
     }
 
     private void ClearRow(int y)
@@ -69,7 +77,7 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                // 注意：這裡暫時只是隱藏，未來會加入特效
+                CheckElementalEffect(x, y);
                 Destroy(grid[x, y]);
                 grid[x, y] = null;
             }
@@ -83,8 +91,38 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
+                CheckElementalEffect(x, y);
                 Destroy(grid[x, y]);
                 grid[x, y] = null;
+            }
+        }
+    }
+
+    private void CheckElementalEffect(int x, int y)
+    {
+        // 獲取該方块的元素屬性 (假設方塊上有一個標記或腳本)
+        // 為了簡單起見，我們先通過物體名字或標籤判斷，稍後優化
+        if (grid[x, y].name.Contains("Fire"))
+        {
+            TriggerFireExplosion(x, y);
+        }
+    }
+
+    private void TriggerFireExplosion(int centerX, int centerY)
+    {
+        Debug.Log($"Fire Explosion at {centerX}, {centerY}!");
+        for (int x = centerX - 1; x <= centerX + 1; x++)
+        {
+            for (int y = centerY - 1; y <= centerY + 1; y++)
+            {
+                if (x >= 0 && x < Columns && y >= 0 && y < Rows)
+                {
+                    if (grid[x, y] != null)
+                    {
+                        Destroy(grid[x, y]);
+                        grid[x, y] = null;
+                    }
+                }
             }
         }
     }
